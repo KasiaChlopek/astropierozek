@@ -46,6 +46,7 @@ body {
 }
 
 .gameplane {
+  border: 2px solid red;
   min-height: 100vh;
   min-height: 100svh;
   background-size: auto 100%;
