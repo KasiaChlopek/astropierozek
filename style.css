@@ -47,8 +47,6 @@ body {
 
 .gameplane {
   border: 2px dashed red;
-  min-height: 100vh;
-  min-height: 100svh;
   background-size: auto 100%;
   color: #fff;
   position: relative;
