@@ -44,15 +44,27 @@ body {
 .in-game {
   cursor: none;
 }
-
 .gameplane {
+  border: 2px dashed red;
+  background-size: auto 100%;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  max-width: 1080px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/*.gameplane {
   min-height: 100vh;
   min-height: 100svh;
   background-size: auto 100%;
   color: #fff;
   position: relative;
   overflow: hidden;
-}
+}*/
+
 .gameplane .space {
   --animation-speed: 5s;
   background-image: url("./images/background-pattern.jpg");
@@ -74,11 +86,20 @@ body {
   max-height: 100%;
 }
 .gameplane .pierog {
+  width: 100px;
+  height: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* .gameplane .pierog {
   --pierog-width: 30%;
   width: var(--pierog-width);
   top: 50%;
   left: calc(50% - var(--pierog-width) / 2);
-}
+}*/
+
 .gameplane .pierog.cant-hit {
   animation: cant-hit 2s infinite;
 }
