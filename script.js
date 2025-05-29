@@ -213,34 +213,16 @@ const mushrooms = new Mushrooms()
 
 gameplane.addEventListener('mousemove', e => {
   if(game.progress){
-    const rect = gameplane.getBoundingClientRect()
-    let newLeft = e.clientX - rect.left - (pierog.offsetWidth / 2)
-
-    // ograniczamy bohatera do pola gry (żeby nie wyjeżdżał poza krawędzie)
-    newLeft = Math.max(0, Math.min(newLeft, gameplane.clientWidth - pierog.offsetWidth))
-
-    pierog.style.left = newLeft + 'px'
-
-    // podobnie z pionem, ale jeśli chcesz ograniczyć w pionie, to analogicznie
-    let newTop = e.clientY - rect.top - (pierog.offsetHeight / 2)
-    newTop = Math.max(0, Math.min(newTop, gameplane.clientHeight - pierog.offsetHeight))
-    pierog.style.top = newTop + 'px'
+    pierog.style.left = (e.clientX - (pierog.offsetWidth / 2) ) + 'px'
+    pierog.style.top = (e.clientY - (pierog.offsetHeight / 2) ) + 'px'
   }
 })
 
 gameplane.addEventListener('touchmove', e => {
   if (game.progress && e.touches.length > 0) {
-    const rect = gameplane.getBoundingClientRect()
     const touch = e.touches[0]
-
-    let newLeft = touch.clientX - rect.left - (pierog.offsetWidth / 2)
-    newLeft = Math.max(0, Math.min(newLeft, gameplane.clientWidth - pierog.offsetWidth))
-
-    let newTop = touch.clientY - rect.top - (pierog.offsetHeight / 2)
-    newTop = Math.max(0, Math.min(newTop, gameplane.clientHeight - pierog.offsetHeight))
-
-    pierog.style.left = newLeft + 'px'
-    pierog.style.top = newTop + 'px'
+    pierog.style.left = (touch.clientX - pierog.offsetWidth / 2) + 'px'
+    pierog.style.top = (touch.clientY - pierog.offsetHeight / 2) + 'px'
   }
 })
 
@@ -305,3 +287,4 @@ restart_button.addEventListener('click', () => {
   game_over_modal.style.display = 'none'
 
 })
+
