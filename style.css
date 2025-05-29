@@ -55,8 +55,8 @@ body {
 
   max-width: 1080px;
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 0;
+  margin-right: 0;
 }
 .gameplane .space {
   --animation-speed: 5s;
