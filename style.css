@@ -46,8 +46,8 @@ body {
 }
 
 .gameplane {
-  min-height: 100vh;
-  min-height: 100svh;
+  max-height: 1920px;
+  max-height: 1080px;
   background-size: auto 100%;
   color: #fff;
   position: relative;
