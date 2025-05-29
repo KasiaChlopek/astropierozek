@@ -88,8 +88,9 @@ body {
   max-height: 100%;
 }
 .gameplane .pierog {
-  width: 100px;
-  height: auto;
+  --pierog-width: 100px; /* lub inna wartość w px */
+  position: absolute;
+  width: var(--pierog-width);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
