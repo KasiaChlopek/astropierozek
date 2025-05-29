@@ -88,12 +88,13 @@ body {
   max-height: 100%;
 }
 .gameplane .pierog {
-  --pierog-width: 100px; /* lub inna wartość w px */
   position: absolute;
-  width: var(--pierog-width);
+  width: 100px;
+  height: auto;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 5;
 }
 
 /* .gameplane .pierog {
