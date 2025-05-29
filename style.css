@@ -78,10 +78,11 @@ body {
   max-height: 100%;
 }
 .gameplane .pierog {
-  --pierog-width: 30%;
-  width: var(--pierog-width);
+  width: 100px;
+  height: auto;
   top: 50%;
-  left: calc(50% - var(--pierog-width) / 2);
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .gameplane .pierog.cant-hit {
   animation: cant-hit 2s infinite;
