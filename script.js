@@ -213,15 +213,16 @@ const mushrooms = new Mushrooms()
 
 gameplane.addEventListener('mousemove', e => {
   if(game.progress){
-    const rect = gameplane.getBoundingClientRect()
-    let newLeft = e.clientX - rect.left - (pierog.offsetWidth / 2)
+    pierog.style.left = (e.clientX - (pierog.offsetWidth / 2) ) + 'px'
+    pierog.style.top = (e.clientY - (pierog.offsetHeight / 2) ) + 'px'
   }
 })
 
 gameplane.addEventListener('touchmove', e => {
   if (game.progress && e.touches.length > 0) {
-    const rect = gameplane.getBoundingClientRect()
     const touch = e.touches[0]
+    pierog.style.left = (touch.clientX - pierog.offsetWidth / 2) + 'px'
+    pierog.style.top = (touch.clientY - pierog.offsetHeight / 2) + 'px'
   }
 })
 
