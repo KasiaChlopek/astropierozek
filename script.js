@@ -173,7 +173,8 @@ class Mushroom extends Meteor{
 
     gameplane.append(this.dom)
     // generowanie metorów w losowych miejsach od left
-    this.dom.style.left = (Math.random() * (gameplane.offsetWidth - this.dom.offsetWidth)) + 'px'
+    const fullWidth = gameplane.offsetWidth + this.dom.offsetWidth
+this.dom.style.left = (Math.random() * fullWidth - this.dom.offsetWidth / 2) + 'px'
     this.dom.style.transition = '.2s'
     this.top = -(this.speed + (3 * this.dom.offsetHeight))
     this.dom.style.top = this.top + 'px'
@@ -213,7 +214,12 @@ const mushrooms = new Mushrooms()
 
 gameplane.addEventListener('mousemove', e => {
   if(game.progress){
-    pierog.style.left = (e.clientX - (pierog.offsetWidth / 2) ) + 'px'
+    let pierogLeft = e.clientX - (pierog.offsetWidth / 2)
+const maxLeft = gameplane.offsetWidth + pierog.offsetWidth / 2
+const minLeft = -pierog.offsetWidth / 2
+pierogLeft = Math.max(minLeft, Math.min(pierogLeft, maxLeft))
+pierog.style.left = pierogLeft + 'px'
+
     pierog.style.top = (e.clientY - (pierog.offsetHeight / 2) ) + 'px'
   }
 })
@@ -221,7 +227,12 @@ gameplane.addEventListener('mousemove', e => {
 gameplane.addEventListener('touchmove', e => {
   if (game.progress && e.touches.length > 0) {
     const touch = e.touches[0]
-    pierog.style.left = (touch.clientX - pierog.offsetWidth / 2) + 'px'
+    let pierogLeft = e.clientX - (pierog.offsetWidth / 2)
+const maxLeft = gameplane.offsetWidth + pierog.offsetWidth / 2
+const minLeft = -pierog.offsetWidth / 2
+pierogLeft = Math.max(minLeft, Math.min(pierogLeft, maxLeft))
+pierog.style.left = pierogLeft + 'px'
+
     pierog.style.top = (touch.clientY - pierog.offsetHeight / 2) + 'px'
   }
 })
