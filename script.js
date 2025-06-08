@@ -1,213 +1,289 @@
-ow* {
-  box-sizing: border-box;
+const gameplane = document.querySelector('.gameplane')
+const pierog = gameplane.querySelector('.pierog')
+const lives = gameplane.querySelector('.lives')
+const start_button = gameplane.querySelector('#start_button')
+const restart_button = gameplane.querySelector('#restart_button')
+const game_intro_modal = gameplane.querySelector('.game-intro-modal')
+const game_over_modal = gameplane.querySelector('.game-over-modal')
+const score = gameplane.querySelector('.score')
+const score_small = gameplane.querySelector('.score-small')
+const face = pierog.querySelector('.face')
+
+let can_be_hit = true
+
+const meteor_img_template = new Image()
+meteor_img_template.src = './images/meteor.webp'
+
+const mushroom_img_template = new Image()
+mushroom_img_template.src = './images/mushroom.webp'
+
+class Meteor {
+
+  constructor(){
+    this.dom = null
+    this.top = 0
+    this.speed = game.speed
+    this.create()
+  }
+
+  create(){
+    this.dom = meteor_img_template.cloneNode(true)
+    this.dom.className = 'meteor'
+
+    gameplane.append(this.dom)
+    // generowanie metorów w losowych miejsach od left
+    this.dom.style.left = (Math.random() * (gameplane.offsetWidth - this.dom.offsetWidth)) + 'px'
+    this.dom.style.transition = '.2s'
+    this.top = -(this.speed + (3 * this.dom.offsetHeight))
+    this.dom.style.top = this.top + 'px'
+  }
+
+  moveDown(){
+    this.top += this.speed
+    this.dom.style.top = this.top + 'px'
+  }
+
+  detectCollision() {
+    const rect_a = this.dom.getBoundingClientRect()
+    const rect_b = pierog.getBoundingClientRect()
+  
+    // meteor (pełne koło)
+    const radius_a = rect_a.width / 2
+    const center_x_a = rect_a.left + radius_a
+    const center_y_a = rect_a.top + radius_a
+  
+    // pierog (górne półkole)
+    const radius_b = rect_b.width / 2
+    const center_x_b = rect_b.left + radius_b
+    const center_y_b = rect_b.bottom // środek półkola – na dole
+  
+    const dx = center_x_a - center_x_b
+    const dy = center_y_a - center_y_b
+    const distance = Math.sqrt(dx * dx + dy * dy)
+  
+    const combined_radius = radius_a + radius_b
+  
+    const is_in_upper_half_circle = center_y_a <= center_y_b // tylko górna część pieroga
+  
+    if (distance < combined_radius && is_in_upper_half_circle) {
+      return {
+        x: center_x_a,
+        y: center_y_a,
+      }
+    }
+  
+    return null
+  }
+
+  handleCollision(){
+    if(can_be_hit){
+      const collision_coords = this.detectCollision()
+      if(collision_coords){
+
+        face.classList.add('sad')
+        setTimeout(() => face.classList.remove('sad'), 1000);
+  
+        lives.children[0].remove()
+
+        if(! lives.children.length){
+          return game.over()
+        }
+  
+        can_be_hit = false
+        pierog.classList.add('cant-hit')
+  
+        setTimeout(() => {
+          can_be_hit = true
+          pierog.classList.remove('cant-hit')
+        }, 3000);
+  
+      }
+    }
+  }
+
 }
 
-body {
-  min-height: 100vh;
-  min-height: 100svh;
-  margin: 0;
+class Meteors {
+
+  list = [];
+  iteration_to_new_meteor = 20; // jak szybko nowe meteory się tworzą - tą możesz ustawić 
+  iteration_to_new_meteor_left = 0; // ta liczba zmienia się automatycznie
+
+  addNewItem(){
+
+    const meteor = new Meteor()
+    meteor.dom.onload = () => {
+      this.list.push(meteor)
+    }
+
+  }
+
+  createNewMeteor(){
+
+    this.iteration_to_new_meteor_left--
+
+    if(this.iteration_to_new_meteor_left < 1){
+      this.iteration_to_new_meteor_left = this.iteration_to_new_meteor * (Math.random() + 1)
+      this.addNewItem()
+    }
+
+  }
+
+  interval(){
+    this.createNewMeteor()
+    this.list = this.list.filter(meteor => {
+      
+      meteor.moveDown()
+      meteor.handleCollision()
+      
+      if(meteor.top > gameplane.offsetHeight + meteor.dom.offsetHeight){
+        meteor.dom.remove()
+        return false
+      }
+
+      return true
+
+    })
+
+  }
+
+  clear(){
+
+    this.list.forEach(meteor => {
+      meteor.dom.remove()
+    })
+
+    this.list = []
+
+  }
+
 }
 
-@keyframes sliding {
-  from {
-    transform: translateY(-90%);
+const meteors = new Meteors()
+
+class Mushroom extends Meteor{
+
+  constructor(){
+    super()
   }
-  to {
-    transform: translateY(90%);
+
+  create(){
+    this.dom = mushroom_img_template.cloneNode(true)
+    this.dom.className = 'mushroom'
+
+    gameplane.append(this.dom)
+    // generowanie metorów w losowych miejsach od left
+    this.dom.style.left = (Math.random() * (gameplane.offsetWidth - this.dom.offsetWidth)) + 'px'
+    this.dom.style.transition = '.2s'
+    this.top = -(this.speed + (3 * this.dom.offsetHeight))
+    this.dom.style.top = this.top + 'px'
   }
-}
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
+
+  handleCollision(){
+
+    const collision_coords = this.detectCollision()
+    if(collision_coords){
+
+      this.dom.remove()
+      score.innerText = (score.innerText * 1) + 1
+
+      face.classList.add('happy')
+      setTimeout(() => face.classList.remove('happy'), 1000);
+
+    }
+
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes cant-hit {
-  0% {
-    opacity: 0.8;
-  }
-  25% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.8;
-  }
-  75% {
-    opacity: 0.2;
-  }
-  100% {
-    opacity: 0.8;
-  }
-}
-.in-game {
-  cursor: none;
-}
-.gameplane {
-  min-height: 100vh;
-  min-height: 100svh;
-  border: 2px dashed yellow;
-  background-size: auto 100%;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-  max-width: 1080px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+
 }
 
-/*.gameplane {
-  min-height: 100vh;
-  min-height: 100svh;
-  background-size: auto 100%;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-}*/
+class Mushrooms extends Meteors{ 
 
-.gameplane .space {
-  --animation-speed: 5s;
-  background-image: url("./images/background-pattern.jpg");
-  background-size: auto 100%;
-  inset: 0;
-}
-.gameplane .space.bg1 {
-  animation: sliding var(--animation-speed) linear infinite;
-}
-.gameplane .space.bg2 {
-  animation: sliding var(--animation-speed) linear infinite;
-  animation-delay: 2.5s;
-}
-.gameplane > div, .gameplane > img {
-  position: absolute;
-}
-.gameplane > div img, .gameplane > img img {
-  max-width: 100%;
-  max-height: 100%;
-}
-.gameplane .pierog {
-  position: absolute;
-  width: 100px;
-  height: auto;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 5;
-}
+  addNewItem(){
 
-/* .gameplane .pierog {
-  --pierog-width: 30%;
-  width: var(--pierog-width);
-  top: 50%;
-  left: calc(50% - var(--pierog-width) / 2);
-}*/
+    const mushroom = new Mushroom()
+    mushroom.dom.onload = () => {
+      this.list.push(mushroom)
+    }
 
-.gameplane .pierog.cant-hit {
-  animation: cant-hit 2s infinite;
-}
-.gameplane .pierog .face {
-  position: absolute;
-  inset: 0;
-  background-image: url("./images/pierog_face.webp");
-  background-size: cover;
-}
-.gameplane .pierog .face::before, .gameplane .pierog .face::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("./images/pierog_face_sad.webp");
-  background-size: cover;
-  opacity: 0;
-}
-.gameplane .pierog .face::after {
-  background-image: url("./images/pierog_face_happy.webp");
-}
-.gameplane .pierog .face.sad {
-  background-image: unset;
-}
-.gameplane .pierog .face.sad::before {
-  opacity: 1;
-}
-.gameplane .pierog .face.happy {
-  background-image: unset;
-}
-.gameplane .pierog .face.happy::after {
-  opacity: 1;
-}
-.gameplane .meteor, .gameplane .mushroom {
-  --meteor-width:15%;
-  width: var(--meteor-width);
-  aspect-ratio: 1/1;
-  background-size: contain;
-  background-repeat: no-repeat;
-  animation: rotate 1s linear infinite;
-}
-.gameplane .lives {
-  bottom: 0;
-  width: 30%;
-  display: flex;
-}
-.gameplane .lives .live {
-  width: 33%;
-  aspect-ratio: 1/1;
-  background: url("./images/live.webp");
-  background-size: contain;
-}
-.gameplane .modal-wrapper {
-  inset: 0;
-  background: #000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-}
-.gameplane .modal-wrapper .modal {
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1333333333);
-  padding: 40px 60px;
-  max-width: 50%;
-}
-.gameplane .modal-wrapper .modal .modal-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.gameplane .modal-wrapper .modal .modal-inner h1 {
-  margin: 0;
-}
-.gameplane .modal-wrapper .modal .modal-inner button {
-  width: 100%;
-  padding: 20px;
-  font-weight: 900;
-  cursor: pointer;
-  border-radius: 5px;
-  border: none;
-}
-.gameplane .score-wrapper {
-  bottom: 0;
-  right: 0;
-  width: 33%;
-  aspect-ratio: 3/1;
-  display: flex;
-  gap: 10px;
-}
-.gameplane .score-wrapper .score-icon {
-  width: 33%;
-  aspect-ratio: 1/1;
-  background: url("./images/mushroom.webp");
-  background-size: contain;
-}
-.gameplane .score-wrapper .score {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  font-size: 4rem;
-}
-
-@media (max-width: 768px) {
-  .gameplane .modal-wrapper .modal {
-    max-width: 90%;
   }
-}/*# sourceMappingURL=style.css.map */
+  
+}
+
+const mushrooms = new Mushrooms()
+
+gameplane.addEventListener('mousemove', e => {
+  if(game.progress){
+    pierog.style.left = (e.clientX - (pierog.offsetWidth / 2) ) + 'px'
+    pierog.style.top = (e.clientY - (pierog.offsetHeight / 2) ) + 'px'
+  }
+})
+
+gameplane.addEventListener('touchmove', e => {
+  if (game.progress && e.touches.length > 0) {
+    const touch = e.touches[0]
+    pierog.style.left = (touch.clientX - pierog.offsetWidth / 2) + 'px'
+    pierog.style.top = (touch.clientY - pierog.offsetHeight / 2) + 'px'
+  }
+})
+
+const game = {
+  progress: false,
+  interval: null,
+  speed: 15,
+  iterations: 0,
+  start(){
+
+    this.progress = true
+    game_intro_modal.style.display = 'none'
+    gameplane.classList.add('in-game')
+    this.interval = setInterval(() => {
+
+      this.iterations++
+
+      if(this.iterations % 10 == 0){
+        this.speed++
+      }
+      
+      meteors.interval()
+      mushrooms.interval()
+
+    }, 100)
+
+  },
+  over(){
+
+    clearInterval(this.interval)
+    gameplane.classList.remove('in-game')
+    this.progress = false
+
+    game_over_modal.style.display = 'flex'
+    score_small.innerText = score.innerText
+    score.innerText = 0
+
+  },
+  restoreLives(){
+    for(let i = 0; i < 3; i++){
+      const live = document.createElement('div')
+      live.className = 'live'
+      lives.append(live)
+    }
+  },
+}
+
+start_button.addEventListener('click', () => {
+  game.start()
+})
+
+restart_button.addEventListener('click', () => {
+
+  meteors.clear()
+  mushrooms.clear()
+
+  game.iterations = 0
+  game.speed = 15
+  game.restoreLives()
+  game.start()
+
+  game_over_modal.style.display = 'none'
+
+})
