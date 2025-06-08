@@ -45,6 +45,8 @@ body {
   cursor: none;
 }
 .gameplane {
+  min-height: 100vh;
+  min-height: 100svh;
   border: 2px dashed red;
   background-size: auto 100%;
   color: #fff;
