@@ -45,14 +45,17 @@ body {
   cursor: none;
 }
 .gameplane {
-  width: 1080px;
-  height: 1920px;
-  position: relative;
-  margin: 0 auto;
-  overflow: hidden;
+  min-height: 100vh;
+  min-height: 100svh;
   border: 2px dashed yellow;
   background-size: auto 100%;
   color: #fff;
+  position: relative;
+  overflow: hidden;
+  max-width: 1080px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /*.gameplane {
