@@ -6,6 +6,7 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   margin: 0;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 @keyframes sliding {
@@ -47,12 +48,11 @@ body {
 .gameplane {
   min-height: 100vh;
   min-height: 100svh;
-  border: 2px dashed red;
   background-size: auto 100%;
   color: #fff;
   position: relative;
   overflow: hidden;
-  max-width: 500px;
+  max-width: 800px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -89,11 +89,8 @@ body {
 }
 .gameplane .pierog {
   position: absolute;
-  width: 100px;
+  width: 200px;
   height: auto;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 5;
 }
 
@@ -146,14 +143,15 @@ body {
 }
 .gameplane .lives {
   bottom: 0;
-  width: 30%;
+  width: 25%;
   display: flex;
 }
 .gameplane .lives .live {
-  width: 33%;
+  width: 30%;
   aspect-ratio: 1/1;
   background: url("./images/live.webp");
   background-size: contain;
+  margin-left: 10px;
 }
 .gameplane .modal-wrapper {
   inset: 0;
@@ -165,7 +163,7 @@ body {
 }
 .gameplane .modal-wrapper .modal {
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1333333333);
+  background: #de2c54;
   padding: 40px 60px;
   max-width: 50%;
 }
@@ -181,29 +179,36 @@ body {
   width: 100%;
   padding: 20px;
   font-weight: 900;
+  font-size: 1rem;
+  color:#de2c54;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 99px;
   border: none;
 }
 .gameplane .score-wrapper {
   bottom: 0;
   right: 0;
-  width: 33%;
+  width: 25%;
   aspect-ratio: 3/1;
   display: flex;
   gap: 10px;
 }
 .gameplane .score-wrapper .score-icon {
-  width: 33%;
+  width: 30%;
+  margin: 10px;
   aspect-ratio: 1/1;
   background: url("./images/mushroom.webp");
-  background-size: contain;
+  background-size: fill;
 }
 .gameplane .score-wrapper .score {
   flex: 1;
   display: flex;
-  align-items: center;
-  font-size: 4rem;
+  justify-content: flex-end;  /* <== ustawia zawartość po prawej */
+  align-items: center;  
+  margin-right: 10px;      /* <== wyśrodkowuje pionowo */
+  font-size: 3rem;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: #de2c54;
 }
 
 @media (max-width: 768px) {
