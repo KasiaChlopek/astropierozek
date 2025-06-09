@@ -216,5 +216,12 @@ body {
   .gameplane .modal-wrapper .modal {
     max-width: 90%;
   }
-}/*# sourceMappingURL=style.css.map */
 
+  .gameplane .score-wrapper .score {
+    font-size: 1.5rem; /* lub 1rem jak wolisz – obecnie 3rem */
+  }
+
+  .gameplane .pierog {
+    width: 30%; /* mniejszy pieróg na telefonie */
+  }
+}
