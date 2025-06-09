@@ -45,11 +45,14 @@
   .gameplane{
     min-height: 100vh;
     min-height: 100svh;
+    max-width: 500px;
+    width: 100%;
     background-size: auto 100%;
     color:#fff;
-    position:relative;
-    overflow:hidden;
-  
+    position: relative;
+    overflow: hidden;
+
+   
     .space {
       --animation-speed: 5s;
   
@@ -76,12 +79,16 @@
       }
     }
   
-    .pierog{
-      --pierog-width: 30%;
-  
-      width:var(--pierog-width);
+    .pierog {
+      --pierog-width: 200px;
+      width: 200px;
+      height: auto;
+      position: absolute;
       top: 50%;
-      left: calc(50% - (var(--pierog-width) / 2));
+      will-change: top, left;
+      margin: 0;
+      padding: 0;
+    }
   
       &.cant-hit{
         animation: cant-hit 2s infinite;
@@ -217,7 +224,6 @@
   
     }
   
-  }
   
   
   @media (max-width: 768px){
