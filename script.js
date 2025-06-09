@@ -106,7 +106,7 @@ class Meteor {
 class Meteors {
 
   list = [];
-  iteration_to_new_meteor = 20; // jak szybko nowe meteory się tworzą - tą możesz ustawić 
+  iteration_to_new_meteor = 15; // jak szybko nowe meteory się tworzą - tą możesz ustawić 
   iteration_to_new_meteor_left = 0; // ta liczba zmienia się automatycznie
 
   addNewItem(){
@@ -212,17 +212,38 @@ class Mushrooms extends Meteors{
 const mushrooms = new Mushrooms()
 
 gameplane.addEventListener('mousemove', e => {
-  if(game.progress){
-    pierog.style.left = (e.clientX - (pierog.offsetWidth / 2) ) + 'px'
-    pierog.style.top = (e.clientY - (pierog.offsetHeight / 2) ) + 'px'
+  if (game.progress) {
+    const gameplaneRect = gameplane.getBoundingClientRect()
+    const pierogWidth = pierog.offsetWidth
+    const pierogHeight = pierog.offsetHeight
+
+    let x = e.clientX - gameplaneRect.left
+    let y = e.clientY - gameplaneRect.top
+
+    // Pozwól wysuwać się poza gameplane o połowę szerokości pieroga
+    x = Math.max(-pierogWidth / 2, Math.min(x, gameplaneRect.width + pierogWidth / 2))
+    y = Math.max(pierogHeight / 2, Math.min(y, gameplaneRect.height - pierogHeight / 2))
+
+    pierog.style.left = `${x - pierogWidth / 2}px`
+    pierog.style.top = `${y - pierogHeight / 2}px`
   }
 })
 
 gameplane.addEventListener('touchmove', e => {
   if (game.progress && e.touches.length > 0) {
     const touch = e.touches[0]
-    pierog.style.left = (touch.clientX - pierog.offsetWidth / 2) + 'px'
-    pierog.style.top = (touch.clientY - pierog.offsetHeight / 2) + 'px'
+    const gameplaneRect = gameplane.getBoundingClientRect()
+    const pierogWidth = pierog.offsetWidth
+    const pierogHeight = pierog.offsetHeight
+
+    let x = touch.clientX - gameplaneRect.left
+    let y = touch.clientY - gameplaneRect.top
+
+    x = Math.max(-pierogWidth / 2, Math.min(x, gameplaneRect.width + pierogWidth / 2))
+    y = Math.max(pierogHeight / 2, Math.min(y, gameplaneRect.height - pierogHeight / 2))
+
+    pierog.style.left = `${x - pierogWidth / 2}px`
+    pierog.style.top = `${y - pierogHeight / 2}px`
   }
 })
 
@@ -240,7 +261,7 @@ const game = {
 
       this.iterations++
 
-      if(this.iterations % 10 == 0){
+      if(this.iterations % 5 == 0){
         this.speed++
       }
       
@@ -280,7 +301,7 @@ restart_button.addEventListener('click', () => {
   mushrooms.clear()
 
   game.iterations = 0
-  game.speed = 15
+  game.speed = 30
   game.restoreLives()
   game.start()
 
