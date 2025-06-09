@@ -148,7 +148,7 @@ body {
   display: flex;
 }
 .gameplane .lives .live {
-  width: 30%;
+  width: 33%;
   aspect-ratio: 1/1;
   background: url("./images/live.webp");
   background-size: contain;
